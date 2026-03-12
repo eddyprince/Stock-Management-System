@@ -1,5 +1,5 @@
 /**
- * Seed: create default admin user (admin / 123) if not exists.
+ * Seed: create default admin user (admin / 12345678) if not exists.
  * Run: npm run seed
  */
 import 'dotenv/config';
@@ -18,12 +18,12 @@ async function seed() {
   }
   const adminUser = new User({
     username: 'admin',
-    password: '123',
+    password: '12345678',
     role: 'admin',
     email: 'admin@stock.local',
   });
   await adminUser.save();
-  console.log('Created admin user: username=admin, password=123');
+  console.log('Created admin user: username=admin, password=12345678');
   process.exit(0);
 }
 

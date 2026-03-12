@@ -83,6 +83,6 @@ Do **not** use “Run” on `playground-1.mongodb.js` or other scripts from the 
 | 1 | MongoDB running (Atlas or local) |
 | 2 | Terminal 1: `cd backend` → `npm run dev` (see “MongoDB connected”) |
 | 3 | Terminal 2: `cd frontend` → `npm run dev` |
-| 4 | Browser: http://localhost:5173 → login admin / 123 |
+| 4 | Browser: http://localhost:5173 → login admin / 12345678 |
 
 If you skip Step 2 or 3, you get **ERR_CONNECTION_REFUSED** on localhost.
