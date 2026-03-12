@@ -3,7 +3,22 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-50 text-slate-800 antialiased;
+  @apply antialiased;
+}
+
+:root[data-theme='light'] {
+  --bg-main: #f8fafc; /* blue-ish white */
+  --text-main: #0f172a;
+}
+
+:root[data-theme='dark'] {
+  --bg-main: #020617; /* very dark blue */
+  --text-main: #e5e7eb;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
 }
 
 /* Focus visible for accessibility */
