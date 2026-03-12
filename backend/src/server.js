@@ -15,6 +15,8 @@ import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import supplierRoutes from './routes/suppliers.js';
 import reportRoutes from './routes/reports.js';
+import salesRoutes from './routes/sales.js';
+import clientRoutes from './routes/clients.js';
 import userRoutes from './routes/users.js';
 
 await connectDB();
@@ -28,6 +30,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/clients', clientRoutes);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 

@@ -42,6 +42,12 @@ const routes = [
     meta: { requiresAuth: true, roles: ['admin', 'stock_manager'] },
   },
   {
+    path: '/sales',
+    name: 'Sales',
+    component: () => import('../views/SalesView.vue'),
+    meta: { requiresAuth: true, roles: ['stock_manager', 'account', 'admin'] },
+  },
+  {
     path: '/reports',
     name: 'Reports',
     component: () => import('../views/ReportsView.vue'),
@@ -58,6 +64,12 @@ const routes = [
     name: 'Users',
     component: () => import('../views/UsersView.vue'),
     meta: { requiresAuth: true, roles: ['admin'] },
+  },
+  {
+    path: '/clients',
+    name: 'Clients',
+    component: () => import('../views/ClientsView.vue'),
+    meta: { requiresAuth: true, roles: ['admin', 'stock_manager', 'account'] },
   },
   {
     path: '/:pathMatch(.*)*',

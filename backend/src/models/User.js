@@ -30,6 +30,10 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.comparePassword = function (candidate) {
+  // Guard against bad data so we never crash bcrypt with undefined arguments
+  if (!candidate || !this.password) {
+    return Promise.resolve(false);
+  }
   return bcrypt.compare(candidate, this.password);
 };
 

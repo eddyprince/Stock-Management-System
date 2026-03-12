@@ -13,6 +13,11 @@
             {{ t('nav.products', 'Products') }}
           </router-link>
         </li>
+        <li v-if="auth.isStockManager || auth.user?.role === 'account'">
+          <router-link to="/sales" class="text-white/90 hover:text-white px-2 py-1 rounded focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700">
+            Sell / Receipt
+          </router-link>
+        </li>
         <li v-if="auth.isDirector">
           <router-link to="/reports" class="text-white/90 hover:text-white px-2 py-1 rounded focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700">
             {{ t('nav.reports', 'Reports') }}
@@ -21,6 +26,11 @@
         <li v-if="auth.isAdmin">
           <router-link to="/users" class="text-white/90 hover:text-white px-2 py-1 rounded focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700">
             {{ t('nav.users', 'Users') }}
+          </router-link>
+        </li>
+        <li v-if="auth.isAdmin || auth.isStockManager || auth.user?.role === 'account'">
+          <router-link to="/clients" class="text-white/90 hover:text-white px-2 py-1 rounded focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700">
+            Clients
           </router-link>
         </li>
         <li>

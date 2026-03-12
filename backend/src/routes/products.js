@@ -9,6 +9,22 @@ import { authenticate, requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
+function parseExpiry(expiryDate) {
+  if (!expiryDate) return undefined;
+  const d = new Date(expiryDate);
+  if (Number.isNaN(d.getTime())) return undefined;
+  return d;
+}
+
+function isValidExpiry(expiryDate) {
+  if (!expiryDate) return true;
+  const d = parseExpiry(expiryDate);
+  if (!d) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d > today; // must be strictly in the future
+}
+
 // List all products (with optional filters: expired, in_stock, out_of_stock)
 router.get('/', authenticate, async (req, res) => {
   try {
@@ -53,6 +69,11 @@ router.post('/', authenticate, requireRole('stock_manager', 'admin'), async (req
       unitPrice,
     } = req.body;
     if (!name) return res.status(400).json({ message: 'Product name required' });
+    if (!isValidExpiry(expiryDate)) {
+      return res
+        .status(400)
+        .json({ message: 'Expiry date must be a future date (after today).' });
+    }
     const product = new Product({
       name,
       sku: sku || undefined,
@@ -62,7 +83,7 @@ router.post('/', authenticate, requireRole('stock_manager', 'admin'), async (req
       totalSupplied: Number(totalSupplied) || 0,
       supplierId: supplierId || undefined,
       supplierName: supplierName || undefined,
-      expiryDate: expiryDate ? new Date(expiryDate) : undefined,
+      expiryDate: parseExpiry(expiryDate),
       unitPrice: unitPrice != null ? Number(unitPrice) : undefined,
     });
     await product.save();
@@ -75,11 +96,19 @@ router.post('/', authenticate, requireRole('stock_manager', 'admin'), async (req
 // Update product
 router.put('/:id', authenticate, requireRole('stock_manager', 'admin'), async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body, updatedAt: Date.now() },
-      { new: true, runValidators: true }
-    );
+    const update = { ...req.body, updatedAt: Date.now() };
+    if (Object.prototype.hasOwnProperty.call(req.body, 'expiryDate')) {
+      if (!isValidExpiry(req.body.expiryDate)) {
+        return res
+          .status(400)
+          .json({ message: 'Expiry date must be a future date (after today).' });
+      }
+      update.expiryDate = parseExpiry(req.body.expiryDate);
+    }
+    const product = await Product.findByIdAndUpdate(req.params.id, update, {
+      new: true,
+      runValidators: true,
+    });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
   } catch (err) {

@@ -1,66 +1,99 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-[#020617] px-4">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-800 via-sky-700 to-sky-500 px-4">
     <div
-      class="w-full max-w-4xl bg-gradient-to-br from-cyan-500/30 via-cyan-400/20 to-emerald-400/10 rounded-3xl p-[1px] shadow-[0_0_40px_rgba(34,211,238,0.4)]"
+      class="w-full max-w-5xl rounded-3xl bg-white/95 text-slate-900 shadow-[0_28px_80px_rgba(15,23,42,0.7)] border border-sky-100 overflow-hidden"
     >
-      <div class="w-full h-full flex flex-col md:flex-row bg-slate-950 rounded-3xl overflow-hidden">
-        <!-- Left banner -->
-        <div class="md:w-1/2 relative flex items-center justify-center bg-gradient-to-br from-cyan-500 to-sky-500 p-8">
-          <div class="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.4),transparent_60%)]" />
-          <div class="relative z-10 text-left text-white">
-            <p class="text-xs uppercase tracking-[0.25em] text-cyan-100 mb-2">Welcome back</p>
-            <h1 class="text-3xl font-extrabold leading-tight mb-2">Secure your stock.</h1>
-            <p class="text-sm text-cyan-50 mb-4 max-w-xs">
-              Log in to see live stock levels, daily sales totals and profit so no item goes missing without you knowing.
-            </p>
-            <ul class="text-[11px] space-y-1 text-cyan-50/90">
-              <li>• Track every product in and out</li>
-              <li>• Detect losses and theft quickly</li>
-              <li>• Separate dashboards for admin, stock manager and director</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Right form -->
-        <div class="md:w-1/2 px-8 py-8 flex flex-col justify-center bg-slate-950">
-          <div class="flex items-center justify-between mb-2">
-            <h2 class="text-xl font-semibold text-cyan-100 text-center md:text-left">Sign in</h2>
-            <router-link
-              to="/"
-              class="hidden md:inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-cyan-200"
-            >
-              ← Back to landing
-            </router-link>
-          </div>
-          <p class="text-xs text-slate-400 mb-4 text-center md:text-left">
-            Use your username and password to access your role‑based dashboard.
+      <!-- Header tabs -->
+      <header class="bg-sky-900 text-white px-8 py-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-sky-200 mb-1">Welcome to</p>
+          <h1 class="text-xl md:text-2xl font-bold leading-tight">Stock Control System</h1>
+          <p class="text-[11px] md:text-xs text-sky-100/80">
+            Optimize your inventory efficiently with role‑based dashboards.
           </p>
-          <router-link
-            to="/"
-            class="md:hidden mb-3 inline-flex items-center justify-center text-[11px] text-slate-400 hover:text-cyan-200"
+        </div>
+        <div class="flex items-end gap-2 text-sm">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-t-md border border-b-0"
+            :class="'bg-white text-sky-900 border-sky-100 font-semibold'"
           >
-            ← Back to landing
+            Login
+          </button>
+          <router-link
+            to="/register"
+            class="px-4 py-2 rounded-t-md border border-sky-700/60 text-sky-100/80 hover:text-white hover:bg-sky-800/80 text-sm"
+          >
+            Register
           </router-link>
+        </div>
+      </header>
+
+      <!-- Body -->
+      <div class="px-8 py-6 grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] items-start">
+        <!-- Login form column -->
+        <section aria-label="Login form" class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-slate-900">Log in</h2>
+            <router-link to="/" class="text-xs text-sky-600 hover:underline">Back to landing</router-link>
+          </div>
+          <p class="text-xs text-slate-500">
+            Use your username and password to access the dashboard for your role (Stock Manager, Account, or Director /
+            Manager).
+          </p>
           <p
             v-if="route.query.registered === '1'"
-            class="mb-3 text-xs text-emerald-400 text-center md:text-left"
+            class="mt-1 text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2"
           >
             Account created. Sign in with your new username and password.
           </p>
-          <LoginForm @success="onLoginSuccess" />
-          <div class="mt-4 flex flex-col items-center gap-1 text-xs text-slate-400">
+          <div class="mt-3 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4">
+            <LoginForm @success="onLoginSuccess" />
+          </div>
+          <div class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-slate-600">
             <p>
               No account?
-              <router-link to="/register" class="text-cyan-300 hover:underline font-medium">Create one</router-link>
+              <router-link to="/register" class="text-sky-700 font-semibold hover:underline">Sign up</router-link>
             </p>
             <p>
               Forgot password?
-              <router-link to="/forgot-password" class="text-cyan-300 hover:underline font-medium"
+              <router-link to="/forgot-password" class="text-sky-700 font-semibold hover:underline"
                 >Reset it here</router-link
               >
             </p>
           </div>
-        </div>
+        </section>
+
+        <!-- Right explanation / role cards -->
+        <aside class="space-y-4 text-xs">
+          <div class="rounded-2xl bg-sky-50 border border-sky-100 p-4">
+            <p class="text-[11px] font-semibold text-sky-900 mb-1">Why log in?</p>
+            <p class="text-slate-600 mb-2">
+              See live stock levels, usage charts and alerts so that no item goes missing without you knowing.
+            </p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Track every product in and out.</li>
+              <li>Compare in‑stock, out‑of‑stock, expired and damaged quantities.</li>
+              <li>View daily sales and profit / loss reports.</li>
+            </ul>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div class="rounded-2xl bg-gradient-to-br from-sky-900 to-sky-700 text-white p-4 shadow-md">
+              <p class="text-xs font-semibold mb-2">Accountant Login</p>
+              <p class="text-[11px] text-sky-100">
+                Account users focus on daily sales and cash records, checking that every transaction is recorded and
+                that profit / loss reports are correct.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 shadow-md">
+              <p class="text-xs font-semibold mb-2">Stock Manager Login</p>
+              <p class="text-[11px] text-slate-100">
+                Stock managers are responsible for updating quantities when products come in, go out, are damaged or
+                expire, keeping stock levels accurate.
+              </p>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   </div>

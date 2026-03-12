@@ -28,7 +28,7 @@
           <!-- Step 1: request code -->
           <form v-if="step === 'request'" @submit.prevent="requestReset" class="space-y-4">
             <div>
-              <label for="fp-username" class="block text-xs font-medium text-slate-200 mb-1 tracking-wide">Username</label>
+              <label for="fp-username" class="block text-xs font-semibold text-slate-900 mb-1 tracking-wide">Username</label>
               <input
                 id="fp-username"
                 v-model="username"
@@ -39,7 +39,7 @@
               />
             </div>
             <div>
-              <label for="fp-email" class="block text-xs font-medium text-slate-200 mb-1 tracking-wide">Email</label>
+              <label for="fp-email" class="block text-xs font-semibold text-slate-900 mb-1 tracking-wide">Email</label>
               <input
                 id="fp-email"
                 v-model="email"
@@ -63,7 +63,7 @@
           <!-- Step 2: verify code + new password -->
           <form v-else @submit.prevent="submitReset" class="space-y-4">
             <div>
-              <label for="fp-code" class="block text-xs font-medium text-slate-200 mb-1 tracking-wide"
+              <label for="fp-code" class="block text-xs font-semibold text-slate-900 mb-1 tracking-wide"
                 >Reset code</label
               >
               <input
@@ -77,7 +77,7 @@
               />
             </div>
             <div>
-              <label for="fp-new" class="block text-xs font-medium text-slate-200 mb-1 tracking-wide"
+              <label for="fp-new" class="block text-xs font-semibold text-slate-900 mb-1 tracking-wide"
                 >New password</label
               >
               <input

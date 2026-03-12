@@ -62,7 +62,7 @@ cd backend
 npm install
 cp .env.example .env
 # Edit .env if needed (MONGODB_URI, JWT_SECRET)
-npm run seed    # Create admin user admin / 12345678
+npm run seed    # Create admin user admin / 123
 npm run dev     # Server on http://localhost:3000
 ```
 
@@ -74,7 +74,7 @@ npm install
 npm run dev     # App on http://localhost:5173 (proxies /api to backend)
 ```
 
-Open http://localhost:5173, log in with `admin` / `12345678`, and use Dashboard, Products, Reports, Users, Account as per your role.
+Open http://localhost:5173, log in with `admin` / `123`, and use Dashboard, Products, Reports, Users, Account as per your role.
 
 ## Documentation (Software engineer view)
 

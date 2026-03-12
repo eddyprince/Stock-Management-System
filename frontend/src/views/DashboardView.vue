@@ -1,81 +1,79 @@
 <template>
-  <div class="min-h-[calc(100vh-3.5rem)] bg-gradient-to-br from-[#020617] via-[#020617] to-[#0f172a] text-slate-100">
-    <div class="max-w-6xl mx-auto px-4 py-6 flex gap-6">
-      <!-- Sidebar -->
-      <aside
-        class="hidden md:flex flex-col w-56 rounded-3xl bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617] border border-white/10 shadow-lg overflow-hidden"
-        aria-label="Dashboard navigation"
-      >
-        <div class="px-5 py-4 border-b border-white/10 flex items-center gap-2">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500 text-xs font-bold">SM</span>
-          <div>
-            <p class="text-xs text-slate-500 uppercase tracking-wide">Stock</p>
-            <p class="text-sm font-semibold">Control Center</p>
+  <div class="min-h-[calc(100vh-3.5rem)] bg-gradient-to-b from-sky-900 via-sky-800 to-sky-700 text-slate-100">
+    <div class="max-w-6xl mx-auto px-4 py-6 space-y-4">
+      <!-- Top title and search -->
+      <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-white">Stock Control Dashboard</h1>
+          <p class="text-xs text-sky-100/80 mt-1">
+            Monitor current stock levels, distribution, usage and alerts from one central place.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div class="relative flex-1 sm:w-64">
+            <input
+              type="text"
+              placeholder="Search products…"
+              class="w-full rounded-full bg-sky-900/70 border border-sky-500/60 px-4 py-2 text-xs placeholder:text-sky-200/70 focus:outline-none focus:ring-2 focus:ring-sky-300"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-sky-200/80">Ctrl+K</span>
           </div>
         </div>
-        <nav class="flex-1 px-2 py-3 text-xs space-y-1">
-          <p class="px-3 py-1 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Overview</p>
-          <button
-            type="button"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-xl bg-slate-800 text-indigo-100 font-semibold"
-          >
-            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/60 text-[11px]">DB</span>
-            <span>Dashboard</span>
-          </button>
-          <button
-            type="button"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-800/70 text-slate-300"
-          >
-            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-fuchsia-500/40 text-[11px]">CH</span>
-            <span>Charts</span>
-          </button>
-          <button
-            type="button"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-800/70 text-slate-300"
-          >
-            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/40 text-[11px]">ST</span>
-            <span>Stock status</span>
-          </button>
-          <button
-            type="button"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-800/70 text-slate-300"
-          >
-            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/40 text-[11px]">RP</span>
-            <span>Reports</span>
-          </button>
-        </nav>
-        <div class="px-4 py-4 border-t border-white/10 text-[11px] text-slate-500">
-          <p class="mb-1 font-semibold">Signed in as</p>
-          <p class="truncate text-slate-300">{{ auth.user?.username }}</p>
-        </div>
-      </aside>
+      </header>
 
-      <!-- Main dashboard -->
-      <main class="flex-1 space-y-5">
-        <!-- Top bar -->
-        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 class="text-2xl font-bold tracking-tight text-slate-50">Dashboard</h1>
-            <p class="text-xs text-slate-400 mt-1">
-              At a glance: in stock, out of stock, expired and damaged quantities across all products.
-            </p>
+      <!-- Tab row like reference (Stock Overview, Stock Distribution, Usage Reports, Alerts) -->
+      <nav
+        class="rounded-2xl bg-sky-950/60 border border-sky-700/60 px-3 py-2 flex flex-wrap items-center gap-2 text-[11px]"
+        aria-label="Dashboard sections"
+      >
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-full font-semibold"
+          :class="activePanel === 'overview' ? 'bg-white text-sky-900 shadow' : 'text-sky-100 hover:bg-sky-800/80'"
+          @click="activePanel = 'overview'"
+        >
+          Stock Overview
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-full font-semibold"
+          :class="activePanel === 'distribution' ? 'bg-white text-sky-900 shadow' : 'text-sky-100 hover:bg-sky-800/80'"
+          @click="activePanel = 'distribution'"
+        >
+          Stock Distribution
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-full font-semibold"
+          :class="activePanel === 'usage' ? 'bg-white text-sky-900 shadow' : 'text-sky-100 hover:bg-sky-800/80'"
+          @click="activePanel = 'usage'"
+        >
+          Usage Reports
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-full font-semibold"
+          :class="activePanel === 'alerts' ? 'bg-white text-sky-900 shadow' : 'text-sky-100 hover:bg-sky-800/80'"
+          @click="activePanel = 'alerts'"
+        >
+          Alerts
+        </button>
+        <div class="ml-auto hidden sm:flex items-center gap-2 text-[11px] text-sky-100/70">
+          <span class="h-7 w-7 inline-flex items-center justify-center rounded-full bg-sky-700/70 font-semibold">SM</span>
+          <div class="leading-tight">
+            <p class="font-semibold text-sky-50 text-[11px]">Signed in as</p>
+            <p class="truncate text-sky-100 text-[11px]">{{ auth.user?.username }}</p>
           </div>
-          <div class="flex items-center gap-2 w-full sm:w-auto">
-            <div class="relative flex-1 sm:w-64">
-              <input
-                type="text"
-                placeholder="Search products…"
-                class="w-full rounded-full bg-slate-900/60 border border-slate-700 px-4 py-2 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">Ctrl+K</span>
-            </div>
-          </div>
-        </header>
+        </div>
+      </nav>
+
+      <!-- Main dashboard card -->
+      <main class="rounded-3xl bg-sky-100/40 border border-sky-200 p-4 space-y-5 shadow-[0_24px_70px_rgba(15,23,42,0.5)] text-slate-900">
 
         <!-- Backend/DB error -->
         <div
           v-if="productsStore.productsError"
-          class="mb-4 p-4 rounded-2xl bg-red-900/60 border border-red-700 text-[11px] text-red-100"
+          class="mb-4 p-4 rounded-2xl bg-red-50 border border-red-200 text-[11px] text-red-800"
           role="alert"
         >
           <p class="font-semibold">Cannot load database</p>
@@ -94,37 +92,37 @@
           </button>
         </div>
 
-        <!-- KPI cards -->
+        <!-- KPI cards / quick summary -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <article class="rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-500 p-4 shadow-lg">
-            <p class="text-[11px] uppercase tracking-wide text-indigo-100 mb-1">In stock items</p>
-            <p class="text-2xl font-extrabold">{{ stats.inStock }}</p>
-            <p class="text-[11px] text-indigo-100/80 mt-1">Products currently available</p>
+          <article class="rounded-2xl bg-white p-4 shadow-md border border-sky-100">
+            <p class="text-[11px] uppercase tracking-wide text-sky-700 mb-1">In stock items</p>
+            <p class="text-2xl font-extrabold text-slate-900">{{ stats.inStock }}</p>
+            <p class="text-[11px] text-slate-500 mt-1">Products currently available</p>
           </article>
-          <article class="rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-500 p-4 shadow-lg">
-            <p class="text-[11px] uppercase tracking-wide text-pink-100 mb-1">Out of stock</p>
-            <p class="text-2xl font-extrabold">{{ stats.outOfStock }}</p>
-            <p class="text-[11px] text-pink-100/80 mt-1">Items that need replenishment</p>
+          <article class="rounded-2xl bg-white p-4 shadow-md border border-rose-100">
+            <p class="text-[11px] uppercase tracking-wide text-rose-700 mb-1">Out of stock</p>
+            <p class="text-2xl font-extrabold text-slate-900">{{ stats.outOfStock }}</p>
+            <p class="text-[11px] text-slate-500 mt-1">Items that need replenishment</p>
           </article>
-          <article class="rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-4 shadow-lg">
-            <p class="text-[11px] uppercase tracking-wide text-slate-900 mb-1">Expired products</p>
+          <article class="rounded-2xl bg-white p-4 shadow-md border border-amber-100">
+            <p class="text-[11px] uppercase tracking-wide text-amber-700 mb-1">Expired products</p>
             <p class="text-2xl font-extrabold text-slate-900">{{ stats.expired }}</p>
-            <p class="text-[11px] text-slate-900/80 mt-1">Require immediate attention</p>
+            <p class="text-[11px] text-slate-500 mt-1">Require immediate attention</p>
           </article>
-          <article class="rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-400 p-4 shadow-lg">
-            <p class="text-[11px] uppercase tracking-wide text-emerald-50 mb-1">Damaged quantity</p>
+          <article class="rounded-2xl bg-white p-4 shadow-md border border-emerald-100">
+            <p class="text-[11px] uppercase tracking-wide text-emerald-700 mb-1">Damaged quantity</p>
             <p class="text-2xl font-extrabold text-slate-900">{{ stats.damaged }}</p>
-            <p class="text-[11px] text-emerald-50/90 mt-1">Total units marked damaged</p>
+            <p class="text-[11px] text-slate-500 mt-1">Total units marked damaged</p>
           </article>
         </section>
 
-        <!-- Middle analytics row -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Middle analytics row and table: content depends on activePanel -->
+        <section v-if="activePanel === 'overview'" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Stock distribution pseudo-chart -->
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 shadow-inner space-y-3">
-            <header class="flex items-center justify-between text-xs text-slate-300 mb-1">
-              <p class="font-semibold">Stock distribution</p>
-              <p class="text-slate-500">By status</p>
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md space-y-3">
+            <header class="flex items-center justify-between text-xs text-slate-700 mb-1">
+              <p class="font-semibold">Stock Distribution</p>
+              <p class="text-slate-400">By status</p>
             </header>
             <div class="flex items-end gap-2 h-28">
               <div class="flex-1 flex flex-col items-center gap-1">
@@ -146,11 +144,11 @@
             </div>
           </div>
 
-          <!-- Filter pills + quick info -->
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 shadow-inner space-y-3">
-            <header class="flex items-center justify-between text-xs text-slate-300 mb-1">
-              <p class="font-semibold">Quick filters</p>
-              <p class="text-slate-500">Change stock view</p>
+          <!-- Stock details and filters combined -->
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md space-y-3">
+            <header class="flex items-center justify-between text-xs text-slate-700 mb-1">
+              <p class="font-semibold">Stock Details</p>
+              <p class="text-slate-400">Quick filters</p>
             </header>
             <div class="flex flex-wrap gap-2 mb-3">
               <button
@@ -160,50 +158,90 @@
                 class="px-3 py-1.5 rounded-full text-[11px] font-medium border transition"
                 :class="
                   productsStore.filter === f.value
-                    ? 'bg-indigo-500 text-white border-indigo-400 shadow'
-                    : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
+                    ? 'bg-sky-600 text-white border-sky-500 shadow'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 "
               >
                 {{ f.label }}
               </button>
             </div>
-            <p class="text-[11px] text-slate-400">
+            <p class="text-[11px] text-slate-500">
               Currently showing
-              <span class="font-semibold text-indigo-200">{{ productsStore.filteredProducts.length }}</span>
-              products.
+              <span class="font-semibold text-sky-700">{{ productsStore.filteredProducts.length }}</span>
+              products in the table below.
             </p>
           </div>
 
           <!-- Small legend / tip card -->
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 shadow-inner space-y-2 text-[11px] text-slate-300">
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md space-y-2 text-[11px] text-slate-600">
             <p class="font-semibold mb-1">Usage tips</p>
-            <ul class="list-disc list-inside space-y-1 text-slate-400">
-              <li>Use <span class="font-semibold text-indigo-200">Products</span> to add or adjust stock.</li>
-              <li>Director role focuses on <span class="font-semibold text-amber-200">Reports</span> only.</li>
-              <li>Admin can manage users and oversee stock flows.</li>
+            <ul class="list-disc list-inside space-y-1">
+              <li>Use <span class="font-semibold text-sky-700">Products</span> to add or adjust stock.</li>
+              <li>Directors focus on <span class="font-semibold text-amber-700">Reports</span> only.</li>
+              <li>Admins can manage users and oversee stock flows.</li>
             </ul>
           </div>
         </section>
 
-        <!-- Table section -->
-        <section class="rounded-2xl bg-slate-950/60 border border-slate-800 p-4 shadow-2xl">
-          <header class="flex items-center justify-between mb-3">
-            <div>
-              <p class="text-xs font-semibold text-slate-200">Products overview</p>
-              <p class="text-[11px] text-slate-500">Live snapshot of all tracked items.</p>
+        <!-- Distribution only -->
+        <section v-else-if="activePanel === 'distribution'" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md space-y-3 lg:col-span-2">
+            <header class="flex items-center justify-between text-xs text-slate-700 mb-1">
+              <p class="font-semibold">Stock Distribution</p>
+              <p class="text-slate-400">By status</p>
+            </header>
+            <div class="flex items-end gap-3 h-40">
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-8 rounded-t-full bg-gradient-to-t from-indigo-500 to-sky-400" :style="{ height: kpiHeight(stats.inStock) }"></div>
+                <span class="text-[11px] text-slate-700 font-medium">In stock</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-8 rounded-t-full bg-gradient-to-t from-fuchsia-500 to-pink-400" :style="{ height: kpiHeight(stats.outOfStock) }"></div>
+                <span class="text-[11px] text-slate-700 font-medium">Out of stock</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-8 rounded-t-full bg-gradient-to-t from-amber-400 to-orange-500" :style="{ height: kpiHeight(stats.expired) }"></div>
+                <span class="text-[11px] text-slate-700 font-medium">Expired</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-8 rounded-t-full bg-gradient-to-t from-emerald-500 to-lime-400" :style="{ height: kpiHeight(stats.damaged) }"></div>
+                <span class="text-[11px] text-slate-700 font-medium">Damaged</span>
+              </div>
             </div>
-          </header>
-          <StockTable :products="productsStore.filteredProducts" :show-actions="auth.isStockManager" />
-          <div
-            v-if="!productsStore.productsError && productsStore.products.length === 0"
-            class="mt-4 p-4 rounded-xl bg-slate-900/80 border border-dashed border-slate-700 text-center text-[12px] text-slate-400"
-          >
-            <p class="font-medium text-slate-200 mb-1">No products in the database yet.</p>
-            <p>
-              Log in as Stock Manager or Admin and go to
-              <router-link to="/products" class="text-indigo-300 hover:underline">Products</router-link>
-              to add items.
-            </p>
+          </div>
+        </section>
+
+        <!-- Usage / reports only -->
+        <section v-else-if="activePanel === 'usage'" class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md">
+          <p class="text-sm font-semibold text-slate-900 mb-2">Usage Reports / How to use this dashboard</p>
+          <ul class="list-decimal list-inside text-[12px] text-slate-600 space-y-1">
+            <li>Check the top cards to see how many items are in stock, out of stock, expired and damaged.</li>
+            <li>Use the Stock status panel to see the full products table and record movements (in, out, damaged).</li>
+            <li>Use the Stock distribution panel to compare statuses and detect unusual patterns (e.g. many damaged items).</li>
+            <li>Directors focus on the Reports section to understand totals and trends without editing data.</li>
+          </ul>
+        </section>
+
+        <!-- Alerts only -->
+        <section v-else-if="activePanel === 'alerts'" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[12px]">
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md">
+            <p class="text-sm font-semibold text-slate-900 mb-2">Alerts &amp; notifications</p>
+            <ul class="space-y-1 text-slate-700">
+              <li v-if="stats.outOfStock > 0">• Low stock alert: {{ stats.outOfStock }} items are out of stock.</li>
+              <li v-if="stats.expired > 0">• Expiry warning: {{ stats.expired }} products are already expired.</li>
+              <li v-if="stats.damaged > 0">• Damage alert: Total damaged quantity is {{ stats.damaged }} units.</li>
+              <li v-if="stats.inStock === 0 && stats.outOfStock === 0 && stats.expired === 0 && stats.damaged === 0">
+                • No alerts yet. Add products to start receiving notifications.
+              </li>
+            </ul>
+          </div>
+          <div class="rounded-2xl bg-white border border-sky-100 p-4 shadow-md">
+            <p class="text-sm font-semibold text-slate-900 mb-2">How to act on alerts</p>
+            <ul class="list-decimal list-inside space-y-1 text-slate-700">
+              <li>Use the Products screen to re‑order out‑of‑stock or low‑stock items.</li>
+              <li>Quickly remove expired products from shelves and update damaged quantities.</li>
+              <li>Open Reports to see how alerts are impacting daily sales and profit.</li>
+            </ul>
           </div>
         </section>
       </main>
@@ -212,13 +250,14 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useProductsStore } from '../stores/products';
 import { useAuthStore } from '../stores/auth';
 import StockTable from '../components/StockTable.vue';
 
 const productsStore = useProductsStore();
 const auth = useAuthStore();
+const activePanel = ref('overview');
 
 const filters = [
   { value: 'all', label: 'All' },

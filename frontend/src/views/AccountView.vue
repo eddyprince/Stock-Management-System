@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-xl mx-auto">
-    <h1 class="text-2xl font-bold text-slate-800 mb-4">Personal profile</h1>
+    <h1 class="text-2xl font-extrabold text-yellow-500 mb-4">Personal Profile</h1>
 
     <!-- Profile info & edit -->
     <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
@@ -14,11 +14,11 @@
       </div>
       <form v-else @submit.prevent="saveProfile" class="space-y-4">
         <div>
-          <label for="displayName" class="block text-sm font-medium text-slate-700 mb-1">Display name (optional)</label>
+          <label for="displayName" class="block text-sm font-semibold text-slate-900 mb-1">Display name (optional)</label>
           <input id="displayName" v-model="profileForm.displayName" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="e.g. Eddy" />
         </div>
         <div>
-          <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email (optional)</label>
+          <label for="email" class="block text-sm font-semibold text-slate-900 mb-1">Email (optional)</label>
           <input id="email" v-model="profileForm.email" type="email" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="you@example.com" />
         </div>
         <p v-if="profileError" class="text-sm text-red-600">{{ profileError }}</p>
@@ -34,15 +34,15 @@
       <h2 class="text-lg font-semibold text-slate-800 mb-4">Change password</h2>
       <form @submit.prevent="savePassword" class="space-y-4">
         <div>
-          <label for="currentPassword" class="block text-sm font-medium text-slate-700 mb-1">Current password</label>
+          <label for="currentPassword" class="block text-sm font-semibold text-slate-900 mb-1">Current password</label>
           <input id="currentPassword" v-model="passwordForm.currentPassword" type="password" required class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="newPassword" class="block text-sm font-medium text-slate-700 mb-1">New password</label>
+          <label for="newPassword" class="block text-sm font-semibold text-slate-900 mb-1">New password</label>
           <input id="newPassword" v-model="passwordForm.newPassword" type="password" required minlength="3" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm new password</label>
+          <label for="confirmPassword" class="block text-sm font-semibold text-slate-900 mb-1">Confirm new password</label>
           <input id="confirmPassword" v-model="passwordForm.confirmPassword" type="password" required class="w-full rounded-lg border border-slate-300 px-3 py-2" />
           <p v-if="passwordMismatch" class="text-sm text-red-600 mt-1">Passwords do not match</p>
         </div>

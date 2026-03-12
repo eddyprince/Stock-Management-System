@@ -1,45 +1,56 @@
 <template>
   <div class="max-w-6xl mx-auto">
-    <h1 class="text-2xl font-bold text-slate-800 mb-4">Products & Stock</h1>
-    <p class="text-slate-600 mb-6">Add products with supplier (where from) and total supplied amount. Record in/out/damaged.</p>
+    <h1 class="text-2xl font-extrabold text-yellow-500 mb-2">Products &amp; Stock</h1>
+    <p class="text-sm font-semibold text-yellow-500 mb-6">
+      Add products with supplier (where from) and total supplied amount. Record in / out / damaged.
+    </p>
 
     <!-- Add/Edit form -->
     <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
       <h2 class="text-lg font-semibold text-slate-800 mb-4">{{ editingId ? 'Edit product' : 'Add product' }}</h2>
       <form @submit.prevent="saveProduct" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Product name *</label>
+          <label for="name" class="block text-sm font-semibold text-slate-900 mb-1">Product name *</label>
           <input id="name" v-model="form.name" required class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="sku" class="block text-sm font-medium text-slate-700 mb-1">SKU</label>
+          <label for="sku" class="block text-sm font-semibold text-slate-900 mb-1">SKU</label>
           <input id="sku" v-model="form.sku" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="quantityInStock" class="block text-sm font-medium text-slate-700 mb-1">Quantity in stock</label>
+          <label for="quantityInStock" class="block text-sm font-semibold text-slate-900 mb-1">Quantity in stock</label>
           <input id="quantityInStock" v-model.number="form.quantityInStock" type="number" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="totalSupplied" class="block text-sm font-medium text-slate-700 mb-1">Total supplied (amount ever received)</label>
+          <label for="totalSupplied" class="block text-sm font-semibold text-slate-900 mb-1">Total supplied (amount ever received)</label>
           <input id="totalSupplied" v-model.number="form.totalSupplied" type="number" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label for="supplierId" class="block text-sm font-medium text-slate-700 mb-1">Supplier (where from)</label>
+          <label for="supplierId" class="block text-sm font-semibold text-slate-900 mb-1">Supplier (where from)</label>
           <select id="supplierId" v-model="form.supplierId" class="w-full rounded-lg border border-slate-300 px-3 py-2">
             <option value="">— Select —</option>
             <option v-for="s in suppliersStore.suppliers" :key="s._id" :value="s._id">{{ s.name }}</option>
           </select>
         </div>
         <div>
-          <label for="supplierName" class="block text-sm font-medium text-slate-700 mb-1">Or supplier name (text)</label>
+          <label for="supplierName" class="block text-sm font-semibold text-slate-900 mb-1">Or supplier name (text)</label>
           <input id="supplierName" v-model="form.supplierName" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="e.g. ABC Supplies" />
         </div>
         <div>
-          <label for="expiryDate" class="block text-sm font-medium text-slate-700 mb-1">Expiry date</label>
-          <input id="expiryDate" v-model="form.expiryDate" type="date" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <label for="expiryDate" class="block text-sm font-semibold text-slate-900 mb-1">Expiry date</label>
+          <input
+            id="expiryDate"
+            v-model="form.expiryDate"
+            type="date"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2"
+            :min="tomorrow"
+          />
+          <p class="mt-1 text-[11px] text-slate-500">
+            Expiry must be a future date (cannot be today or in the past).
+          </p>
         </div>
         <div>
-          <label for="unitPrice" class="block text-sm font-medium text-slate-700 mb-1">Unit price</label>
+          <label for="unitPrice" class="block text-sm font-semibold text-slate-900 mb-1">Unit price</label>
           <input id="unitPrice" v-model.number="form.unitPrice" type="number" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </div>
         <div class="md:col-span-2 flex gap-2">
@@ -62,11 +73,11 @@
     </div>
 
     <!-- Record transaction (in/out/damaged) -->
-    <div v-if="selectedProduct" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div v-if="selectedProduct" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
       <h3 class="font-semibold text-slate-800 mb-2">Record movement: {{ selectedProduct.name }}</h3>
       <div class="flex gap-2 flex-wrap items-end">
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Type</label>
+          <label class="block text-sm font-semibold text-slate-900 mb-1">Type</label>
           <select v-model="tx.type" class="rounded-lg border border-slate-300 px-3 py-2">
             <option value="in">In</option>
             <option value="out">Out</option>
@@ -74,11 +85,11 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Quantity</label>
+          <label class="block text-sm font-semibold text-slate-900 mb-1">Quantity</label>
           <input v-model.number="tx.quantity" type="number" min="1" class="rounded-lg border border-slate-300 px-3 py-2 w-24" />
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Amount (optional)</label>
+          <label class="block text-sm font-semibold text-slate-900 mb-1">Amount (optional)</label>
           <input v-model.number="tx.amount" type="number" min="0" step="0.01" class="rounded-lg border border-slate-300 px-3 py-2 w-28" />
         </div>
         <button type="button" @click="submitTransaction" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">Record</button>
@@ -91,7 +102,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProductsStore } from '../stores/products';
 import { useSuppliersStore } from '../stores/suppliers';
@@ -106,6 +117,11 @@ const editingId = ref(null);
 const selectedProduct = ref(null);
 const tx = ref({ type: 'in', quantity: 1, amount: null });
 const newSupplier = ref({ name: '', contact: '' });
+const tomorrow = computed(() => {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+});
 
 const form = ref({
   name: '',

@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-6xl mx-auto">
-    <h1 class="text-2xl font-bold text-slate-800 mb-4">Reports</h1>
-    <p class="text-slate-600 mb-6">
+    <h1 class="text-2xl font-extrabold text-yellow-500 mb-2">Reports</h1>
+    <p class="text-sm font-semibold text-yellow-500 mb-6">
       Director view: stock status plus estimated sales and profit/loss based on stock transactions.
     </p>
 
@@ -34,6 +34,13 @@
         @click="downloadPdf('stock')"
       >
         Full stock report
+      </button>
+      <button
+        type="button"
+        class="ml-auto px-3 py-1.5 rounded-full text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100"
+        @click="printPage"
+      >
+        Print current view
       </button>
     </div>
 
@@ -76,6 +83,23 @@
           </p>
         </div>
       </div>
+
+      <!-- Payment method breakdown -->
+      <section v-if="report.paymentByMethod?.length" class="mb-8">
+        <h2 class="text-lg font-extrabold text-yellow-500 mb-2">Payments by Method</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            v-for="row in paymentCards"
+            :key="row.method"
+            class="rounded-xl border border-slate-200 bg-slate-50 p-4"
+          >
+            <p class="text-sm text-slate-700 mb-1">{{ row.label }}</p>
+            <p class="text-xl font-bold text-slate-900">
+              {{ row.amount.toLocaleString() }}
+            </p>
+          </div>
+        </div>
+      </section>
       <div class="mb-8 bg-slate-50 rounded-xl border border-slate-200 p-4">
         <p class="text-sm text-slate-600 mb-1">Estimated profit / loss</p>
         <p
@@ -106,26 +130,53 @@
         </div>
       </div>
 
-      <section class="mb-8">
-        <h2 class="text-lg font-semibold text-slate-800 mb-2">Expired items</h2>
+      <!-- Sales by user (who made sales) -->
+      <section v-if="report.salesByUser?.length" class="mb-8">
+        <h2 class="text-lg font-extrabold text-yellow-500 mb-2">Sales by User</h2>
         <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <table class="w-full text-sm">
-            <thead class="bg-slate-100">
+            <thead class="bg-slate-100 text-slate-900">
               <tr>
-                <th class="px-4 py-2 text-left">Name</th>
-                <th class="px-4 py-2 text-left">SKU</th>
-                <th class="px-4 py-2 text-left">Qty</th>
-                <th class="px-4 py-2 text-left">Expiry</th>
-                <th class="px-4 py-2 text-left">Supplier</th>
+                <th class="px-4 py-2 text-left font-semibold">User</th>
+                <th class="px-4 py-2 text-left font-semibold">Role</th>
+                <th class="px-4 py-2 text-left font-semibold">Total sales qty</th>
+                <th class="px-4 py-2 text-left font-semibold">Total sales amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="u in report.salesByUser" :key="u.userId" class="border-t border-slate-200">
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ u.username }}</td>
+                <td class="px-4 py-2 text-slate-700">{{ u.role }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ u.totalSalesQty }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">
+                  {{ (u.totalSalesAmount ?? 0).toLocaleString() }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-lg font-extrabold text-yellow-500 mb-2">Expired Items</h2>
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-100 text-slate-900">
+              <tr>
+                <th class="px-4 py-2 text-left font-semibold">Name</th>
+                <th class="px-4 py-2 text-left font-semibold">SKU</th>
+                <th class="px-4 py-2 text-left font-semibold">Qty</th>
+                <th class="px-4 py-2 text-left font-semibold">Expiry</th>
+                <th class="px-4 py-2 text-left font-semibold">Supplier</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="p in report.expiredItems" :key="p._id" class="border-t border-slate-200">
-                <td class="px-4 py-2">{{ p.name }}</td>
-                <td class="px-4 py-2">{{ p.sku || '—' }}</td>
-                <td class="px-4 py-2">{{ p.quantityInStock }}</td>
-                <td class="px-4 py-2 text-red-600">{{ formatDate(p.expiryDate) }}</td>
-                <td class="px-4 py-2">{{ p.supplierName || '—' }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.name }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.sku || '—' }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.quantityInStock }}</td>
+                <td class="px-4 py-2 text-red-600 font-semibold">{{ formatDate(p.expiryDate) }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.supplierName || '—' }}</td>
               </tr>
             </tbody>
           </table>
@@ -134,19 +185,19 @@
       </section>
 
       <section class="mb-8">
-        <h2 class="text-lg font-semibold text-slate-800 mb-2">Damaged summary</h2>
+        <h2 class="text-lg font-extrabold text-yellow-500 mb-2">Damaged Summary</h2>
         <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <table class="w-full text-sm">
-            <thead class="bg-slate-100">
+            <thead class="bg-slate-100 text-slate-900">
               <tr>
-                <th class="px-4 py-2 text-left">Name</th>
-                <th class="px-4 py-2 text-left">Damaged qty</th>
+                <th class="px-4 py-2 text-left font-semibold">Name</th>
+                <th class="px-4 py-2 text-left font-semibold">Damaged qty</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="p in report.damagedSummary" :key="p._id" class="border-t border-slate-200">
-                <td class="px-4 py-2">{{ p.name }}</td>
-                <td class="px-4 py-2">{{ p.quantityDamaged }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.name }}</td>
+                <td class="px-4 py-2 font-semibold text-slate-900">{{ p.quantityDamaged }}</td>
               </tr>
             </tbody>
           </table>
@@ -158,13 +209,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import client from '../api/client';
 import { useAuthStore } from '../stores/auth';
 
 const report = ref({});
 const loading = ref(true);
 const auth = useAuthStore();
+
+const paymentCards = computed(() => {
+  const raw = report.value.paymentByMethod || [];
+  const labelMap = {
+    cash: 'Cash payments',
+    phone: 'Phone / mobile money',
+    bank: 'Bank transfers',
+    code: 'Codes / vouchers',
+    debt: 'Debts (unpaid)',
+    cheque: 'Cheques',
+  };
+  return raw.map((row) => ({
+    method: row.method,
+    label: labelMap[row.method] || row.method,
+    amount: row.totalAmount || 0,
+  }));
+});
 
 function formatDate(d) {
   return d ? new Date(d).toLocaleDateString() : '';
@@ -177,6 +245,10 @@ function downloadPdf(type) {
   if (token) params.append('token', token);
   const url = `/api/reports/pdf?${params.toString()}`;
   window.open(url, '_blank');
+}
+
+function printPage() {
+  window.print();
 }
 
 onMounted(async () => {
