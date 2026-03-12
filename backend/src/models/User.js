@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
   },
   email: { type: String, trim: true },
   displayName: { type: String, trim: true },
+  verificationCode: { type: String, trim: true }, // for registration verification
+  verified: { type: Boolean, default: false },
+  resetCode: { type: String, trim: true }, // for password reset
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

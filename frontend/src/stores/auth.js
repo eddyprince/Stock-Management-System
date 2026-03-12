@@ -37,6 +37,21 @@ export const useAuthStore = defineStore('auth', () => {
     return data;
   }
 
+  async function verifyRegistrationCode(username, code) {
+    const { data } = await client.post('/auth/verify-code', { username, code });
+    return data;
+  }
+
+  async function requestPasswordReset(username, email) {
+    const { data } = await client.post('/auth/request-reset', { username, email });
+    return data;
+  }
+
+  async function resetPassword(username, code, newPassword) {
+    const { data } = await client.post('/auth/reset-password', { username, code, newPassword });
+    return data;
+  }
+
   function logout() {
     setAuth(null, null);
   }
@@ -68,6 +83,9 @@ export const useAuthStore = defineStore('auth', () => {
     isDirector,
     login,
     register,
+    verifyRegistrationCode,
+    requestPasswordReset,
+    resetPassword,
     logout,
     fetchMe,
     updateProfile,
