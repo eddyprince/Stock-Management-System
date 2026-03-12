@@ -1,7 +1,9 @@
 <template>
   <div class="max-w-6xl mx-auto">
     <h1 class="text-2xl font-bold text-slate-800 mb-4">Reports</h1>
-    <p class="text-slate-600 mb-6">Director view: expired stock, in stock, out of stock, damaged quantity, and total supplied.</p>
+    <p class="text-slate-600 mb-6">
+      Director view: stock status plus estimated sales and profit/loss based on stock transactions.
+    </p>
 
     <div class="flex flex-wrap items-center gap-2 mb-4">
       <span class="text-xs text-slate-500 mr-1">Export as PDF:</span>
@@ -54,6 +56,40 @@
           <p class="text-sm text-red-700">Expired</p>
           <p class="text-2xl font-bold text-red-800">{{ report.summary?.expired ?? 0 }}</p>
         </div>
+      </div>
+      <!-- Sales & profit/loss -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-emerald-50 rounded-xl border border-emerald-200 p-4">
+          <p class="text-sm text-emerald-700">Total sales quantity</p>
+          <p class="text-xl font-bold text-emerald-800">{{ report.salesSummary?.totalSalesQty ?? 0 }}</p>
+        </div>
+        <div class="bg-emerald-50 rounded-xl border border-emerald-200 p-4">
+          <p class="text-sm text-emerald-700">Total sales amount</p>
+          <p class="text-xl font-bold text-emerald-800">
+            {{ (report.salesSummary?.totalSalesAmount ?? 0).toLocaleString() }}
+          </p>
+        </div>
+        <div class="bg-rose-50 rounded-xl border border-rose-200 p-4">
+          <p class="text-sm text-rose-700">Estimated loss (damaged)</p>
+          <p class="text-xl font-bold text-rose-800">
+            {{ (report.salesSummary?.estimatedLoss ?? 0).toLocaleString() }}
+          </p>
+        </div>
+      </div>
+      <div class="mb-8 bg-slate-50 rounded-xl border border-slate-200 p-4">
+        <p class="text-sm text-slate-600 mb-1">Estimated profit / loss</p>
+        <p
+          class="text-2xl font-bold"
+          :class="
+            (report.salesSummary?.estimatedProfit ?? 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
+          "
+        >
+          {{ (report.salesSummary?.estimatedProfit ?? 0).toLocaleString() }}
+        </p>
+        <p class="text-xs text-slate-500 mt-1">
+          Profit is calculated as total sales amount minus estimated loss from damaged items
+          (using each product's unit price for estimation).
+        </p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">

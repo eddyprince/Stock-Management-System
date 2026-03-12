@@ -4,6 +4,7 @@
 import express from 'express';
 import PDFDocument from 'pdfkit';
 import Product from '../models/Product.js';
+import StockTransaction from '../models/StockTransaction.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -12,6 +13,23 @@ router.get('/', authenticate, requireRole('director', 'admin'), async (req, res)
   try {
     const products = await Product.find().populate('supplierId', 'name');
     const now = new Date();
+    // Use stock transactions to estimate sales and profit/loss
+    const tx = await StockTransaction.find({
+      type: { $in: ['out', 'damaged'] },
+    }).populate('productId', 'name unitPrice');
+    const salesTx = tx.filter((t) => t.type === 'out');
+    const damagedTx = tx.filter((t) => t.type === 'damaged');
+    const totalSalesQty = salesTx.reduce((s, t) => s + (t.quantity || 0), 0);
+    const totalSalesAmount = salesTx.reduce(
+      (s, t) => s + (t.amount != null ? t.amount : (t.productId?.unitPrice || 0) * (t.quantity || 0)),
+      0,
+    );
+    const totalDamagedQty = damagedTx.reduce((s, t) => s + (t.quantity || 0), 0);
+    const estimatedLoss = damagedTx.reduce(
+      (s, t) => s + (t.productId?.unitPrice || 0) * (t.quantity || 0),
+      0,
+    );
+    const estimatedProfit = totalSalesAmount - estimatedLoss;
     const report = {
       summary: {
         totalProducts: products.length,
@@ -21,6 +39,13 @@ router.get('/', authenticate, requireRole('director', 'admin'), async (req, res)
         totalQuantityInStock: products.reduce((s, p) => s + (p.quantityInStock || 0), 0),
         totalQuantityDamaged: products.reduce((s, p) => s + (p.quantityDamaged || 0), 0),
         totalSuppliedAll: products.reduce((s, p) => s + (p.totalSupplied || 0), 0),
+      },
+      salesSummary: {
+        totalSalesQty,
+        totalSalesAmount,
+        totalDamagedQty,
+        estimatedLoss,
+        estimatedProfit,
       },
       expiredItems: products
         .filter((p) => p.expiryDate && p.expiryDate < now)
