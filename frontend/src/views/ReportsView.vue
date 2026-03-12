@@ -3,6 +3,38 @@
     <h1 class="text-2xl font-bold text-slate-800 mb-4">Reports</h1>
     <p class="text-slate-600 mb-6">Director view: expired stock, in stock, out of stock, damaged quantity, and total supplied.</p>
 
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="text-xs text-slate-500 mr-1">Export as PDF:</span>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-white hover:bg-slate-900"
+        @click="downloadPdf('summary')"
+      >
+        Summary
+      </button>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-full text-xs font-medium bg-amber-500 text-white hover:bg-amber-600"
+        @click="downloadPdf('expired')"
+      >
+        Expired
+      </button>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-full text-xs font-medium bg-red-500 text-white hover:bg-red-600"
+        @click="downloadPdf('damaged')"
+      >
+        Damaged
+      </button>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-600 text-white hover:bg-slate-700"
+        @click="downloadPdf('stock')"
+      >
+        Full stock report
+      </button>
+    </div>
+
     <div v-if="loading" class="text-slate-500">Loading report…</div>
     <template v-else>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -98,6 +130,13 @@ const loading = ref(true);
 
 function formatDate(d) {
   return d ? new Date(d).toLocaleDateString() : '';
+}
+
+function downloadPdf(type) {
+  const safeType = type || 'summary';
+  // Use the same base URL/proxy as axios client: /api/reports/pdf?type=...
+  const url = `/api/reports/pdf?type=${encodeURIComponent(safeType)}`;
+  window.open(url, '_blank');
 }
 
 onMounted(async () => {
