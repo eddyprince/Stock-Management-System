@@ -1,0 +1,10 @@
+# Paste this into backend/.env (replace YOUR_ACTUAL_PASSWORD with your real Atlas DB password)
+
+PORT=3000
+MONGODB_URI=mongodb+srv://cyubahiroeddyprince_db_user:YOUR_ACTUAL_PASSWORD@cluster0.ytaavfx.mongodb.net/stock_management?retryWrites=true&w=majority
+JWT_SECRET=my-jwt-secret-key
+
+# 1. Copy the 3 lines above (PORT, MONGODB_URI, JWT_SECRET).
+# 2. Replace YOUR_ACTUAL_PASSWORD with the real password for user cyubahiroeddyprince_db_user.
+# 3. Save as backend/.env (not in this file - create or open the file named .env in the backend folder).
+# 4. Run: npm run dev

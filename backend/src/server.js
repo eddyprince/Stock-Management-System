@@ -1,8 +1,14 @@
 /**
  * Express server: auth, products, suppliers, reports, users.
+ * Loads .env from the backend folder (not cwd) so Atlas URI is always found.
  */
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';

@@ -38,7 +38,7 @@ The **Stock Management Control System** is a web application that lets authorize
 |------|-------------------|
 | **Account** | Account operations (profile, own data). |
 | **Stock Manager** | Add/edit products, record stock in/out/damaged, link supplier and total supplied. |
-| **Admin** | Full access; user management; default login: `eddyprince` / `123`. |
+| **Admin** | Full access; user management; default login: `admin` / `123`. |
 | **Director** | View reports and dashboards (expired, in stock, out of stock, damaged, etc.). |
 
 ---
@@ -322,7 +322,7 @@ flowchart TB
 
 ## 6. Default Admin Credentials
 
-- **Username:** `eddyprince`  
+- **Username:** `admin`  
 - **Password:** `123`  
 
 (To be created on first run or via seed; in production use strong password and change immediately.)

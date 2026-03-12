@@ -13,7 +13,7 @@ A web application for managing stock information: **in stock**, **out of stock**
 
 ## Default admin login
 
-- **Username:** `eddyprince`  
+- **Username:** `admin`
 - **Password:** `123`
 
 ## Project structure
@@ -30,7 +30,7 @@ StockManagementSystem/
 │   │   ├── routes/        # auth, products, suppliers, reports, users
 │   │   ├── middleware/   # JWT auth, requireRole
 │   │   ├── server.js
-│   │   └── seed.js       # Creates admin user eddyprince/123
+│   │   └── seed.js       # Creates admin user admin/123
 │   └── package.json
 ├── frontend/              # Vue 3 SPA
 │   ├── src/
@@ -51,7 +51,9 @@ StockManagementSystem/
 ### Prerequisites
 
 - Node.js 18+
-- MongoDB running locally (or set `MONGODB_URI` in backend `.env`)
+- **MongoDB** – either running locally on port 27017, or a MongoDB Atlas connection string in backend `.env`
+
+**If the system does not start:** the backend exits when it cannot connect to MongoDB. See **[RUNNING.md](RUNNING.md)** for why it fails and how to fix it (local MongoDB or Atlas).
 
 ### Backend
 
@@ -60,7 +62,7 @@ cd backend
 npm install
 cp .env.example .env
 # Edit .env if needed (MONGODB_URI, JWT_SECRET)
-npm run seed    # Create admin user eddyprince / 123
+npm run seed    # Create admin user admin / 123
 npm run dev     # Server on http://localhost:3000
 ```
 
@@ -72,7 +74,7 @@ npm install
 npm run dev     # App on http://localhost:5173 (proxies /api to backend)
 ```
 
-Open http://localhost:5173, log in with `eddyprince` / `123`, and use Dashboard, Products, Reports, Users, Account as per your role.
+Open http://localhost:5173, log in with `admin` / `123`, and use Dashboard, Products, Reports, Users, Account as per your role.
 
 ## Documentation (Software engineer view)
 

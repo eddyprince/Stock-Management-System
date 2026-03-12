@@ -1,0 +1,13 @@
+@startuml Stock Management - Data Flow Diagram (Level 0 - Context)
+!theme plain
+skinparam backgroundColor #F8FAFC
+
+actor User
+rectangle "Stock Management\nSystem" as System
+database "MongoDB" as DB
+
+User --> System : Login, CRUD, Reports
+System --> User : Responses / UI
+System <--> DB : Read/Write
+
+@enduml

@@ -7,6 +7,7 @@ import client from '../api/client';
 
 export const useProductsStore = defineStore('products', () => {
   const products = ref([]);
+  const productsError = ref(null); // e.g. "Backend not running"
   const filter = ref('all'); // all | in_stock | out_of_stock | expired
 
   const filteredProducts = computed(() => {
@@ -21,13 +22,20 @@ export const useProductsStore = defineStore('products', () => {
   });
 
   async function fetchProducts(params = {}) {
-    const query = new URLSearchParams();
-    if (params.status) query.set('status', params.status);
-    if (params.expired === true) query.set('expired', 'true');
-    const url = query.toString() ? `/products?${query}` : '/products';
-    const { data } = await client.get(url);
-    products.value = data;
-    return data;
+    productsError.value = null;
+    try {
+      const query = new URLSearchParams();
+      if (params.status) query.set('status', params.status);
+      if (params.expired === true) query.set('expired', 'true');
+      const url = query.toString() ? `/products?${query}` : '/products';
+      const { data } = await client.get(url);
+      products.value = data;
+      return data;
+    } catch (err) {
+      productsError.value = err.response?.data?.message || err.message || 'Could not load data. Is the backend running on port 3000?';
+      products.value = [];
+      throw err;
+    }
   }
 
   async function addProduct(payload) {
@@ -61,6 +69,7 @@ export const useProductsStore = defineStore('products', () => {
 
   return {
     products,
+    productsError,
     filter,
     filteredProducts,
     fetchProducts,

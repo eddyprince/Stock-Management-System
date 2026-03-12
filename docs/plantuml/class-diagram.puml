@@ -1,0 +1,55 @@
+@startuml Stock Management - Class Diagram
+!theme plain
+skinparam backgroundColor #F8FAFC
+skinparam class {
+  BackgroundColor #E2E8F0
+  BorderColor #0D9488
+}
+
+class User {
+  +_id : ObjectId
+  +username : String
+  +passwordHash : String
+  +role : String
+  +email : String
+  +createdAt : Date
+  --
+  +comparePassword(candidate) : Boolean
+}
+
+class Product {
+  +_id : ObjectId
+  +name : String
+  +sku : String
+  +quantityInStock : Number
+  +quantityDamaged : Number
+  +totalSupplied : Number
+  +supplierId : ObjectId
+  +expiryDate : Date
+  --
+  +isExpired() : Boolean
+  +stockStatus : String
+}
+
+class Supplier {
+  +_id : ObjectId
+  +name : String
+  +contact : String
+  +address : String
+}
+
+class StockTransaction {
+  +_id : ObjectId
+  +productId : ObjectId
+  +type : String
+  +quantity : Number
+  +amount : Number
+  +userId : ObjectId
+  +createdAt : Date
+}
+
+Product --> Supplier : from (supplierId)
+Product "1" --> "*" StockTransaction : has
+User --> StockTransaction : creates
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml Stock Management - Sequence Diagram (Login & View Stock)
+!theme plain
+skinparam backgroundColor #F8FAFC
+skinparam sequenceMessageAlign center
+
+actor User
+participant "Vue App" as Vue
+participant "Vue Router" as Router
+participant "API\n(Express)" as API
+database "MongoDB" as DB
+
+User -> Vue : Open app
+Vue -> Router : Check route
+Router -> Vue : requiresAuth, no token
+Vue -> User : Redirect to Login
+User -> Vue : Enter username, password
+Vue -> API : POST /auth/login\n{ username, password }
+API -> DB : Find user, verify password
+DB --> API : User document
+API --> Vue : 200 OK\n{ token, user }
+Vue -> Vue : Store token in localStorage\nRedirect by role
+Vue -> API : GET /products\nAuthorization: Bearer <token>
+API -> DB : Query products
+DB --> API : Products
+API --> Vue : 200 OK\n[ products ]
+Vue -> User : Display dashboard (stock data)
+
+@enduml

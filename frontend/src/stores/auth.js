@@ -44,7 +44,19 @@ export const useAuthStore = defineStore('auth', () => {
   async function fetchMe() {
     const { data } = await client.get('/auth/me');
     user.value = data.user;
+    if (token.value) localStorage.setItem('user', JSON.stringify(data.user));
     return data;
+  }
+
+  async function updateProfile(payload) {
+    const { data } = await client.patch('/auth/profile', payload);
+    user.value = data.user;
+    localStorage.setItem('user', JSON.stringify(data.user));
+    return data;
+  }
+
+  async function changePassword(currentPassword, newPassword) {
+    await client.post('/auth/change-password', { currentPassword, newPassword });
   }
 
   return {
@@ -58,6 +70,8 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     fetchMe,
+    updateProfile,
+    changePassword,
     setAuth,
   };
 });

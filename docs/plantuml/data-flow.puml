@@ -1,0 +1,45 @@
+@startuml Stock Management - Data Flow Diagram (Level 1)
+!theme plain
+skinparam backgroundColor #F8FAFC
+skinparam component {
+  BackgroundColor #E2E8F0
+  BorderColor #0D9488
+}
+
+actor User
+
+rectangle "Frontend (Vue SPA)" as Frontend {
+  [Login Form] as P1
+  [Dashboard / Stock] as P2
+  [Product/Supply Forms] as P3
+  [Reports View] as P4
+}
+
+rectangle "Backend API" as Backend {
+  [Auth API] as A1
+  [Products/Stock API] as A2
+  [Reports API] as A3
+}
+
+database "MongoDB" as DB
+
+User --> P1 : use
+User --> P2 : use
+User --> P3 : use
+User --> P4 : use
+P1 --> A1 : POST /auth/login
+P2 --> A2 : GET /products
+P3 --> A2 : POST/PUT /products
+P4 --> A3 : GET /reports
+A1 --> DB : read/write
+A2 --> DB : read/write
+A3 --> DB : read
+DB --> A1 : response
+DB --> A2 : response
+DB --> A3 : response
+A1 --> P1 : JWT, user
+A2 --> P2 : products
+A2 --> P3 : result
+A3 --> P4 : report data
+
+@enduml

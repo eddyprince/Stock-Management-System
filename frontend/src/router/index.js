@@ -6,20 +6,22 @@ import { useAuthStore } from '../stores/auth';
 
 const routes = [
   {
+    path: '/',
+    name: 'Landing',
+    component: () => import('../views/LandingView.vue'),
+    meta: { requiresAuth: false },
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
     meta: { requiresAuth: false },
   },
   {
-    path: '/',
-    redirect: (to) => {
-      const auth = useAuthStore();
-      if (!auth.isAuthenticated) return { name: 'Login' };
-      if (auth.isDirector && !auth.isAdmin) return { name: 'Reports' };
-      return { name: 'Dashboard' };
-    },
-    meta: { requiresAuth: true },
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/RegisterView.vue'),
+    meta: { requiresAuth: false },
   },
   {
     path: '/dashboard',
@@ -66,6 +68,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
+  // If user is logged in and visits landing/login/register, send to dashboard
+  if (auth.isAuthenticated && (to.name === 'Landing' || to.name === 'Login' || to.name === 'Register')) {
+    if (auth.isDirector && !auth.isAdmin) return next({ name: 'Reports' });
+    return next({ name: 'Dashboard' });
+  }
+  // Protected routes: require login
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     next({ name: 'Login', query: { redirect: to.fullPath } });
     return;

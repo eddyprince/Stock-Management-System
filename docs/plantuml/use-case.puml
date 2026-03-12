@@ -1,0 +1,54 @@
+@startuml Stock Management - Use Case Diagram
+!theme plain
+skinparam backgroundColor #F8FAFC
+skinparam usecase {
+  BackgroundColor #E2E8F0
+  BorderColor #0D9488
+}
+skinparam actor {
+  BackgroundColor #14B8A6
+  BorderColor #0F766E
+}
+
+left to right direction
+
+actor "User" as User
+actor "Admin" as Admin
+actor "Stock Manager" as StockMgr
+actor "Director" as Director
+actor "Account" as Account
+
+rectangle "Stock Management System" {
+  use case "Login" as UC_Login
+  use case "Logout" as UC_Logout
+  use case "View Stock Info" as UC_ViewStock
+  use case "View Expired Stock" as UC_ViewExpired
+  use case "View Damaged Qty" as UC_ViewDamaged
+  use case "Manage Products" as UC_ManageProducts
+  use case "Record Supply / Supplier" as UC_RecordSupply
+  use case "View Reports" as UC_ViewReports
+  use case "Manage Users" as UC_ManageUsers
+  use case "Account Operations" as UC_Account
+}
+
+User --> UC_Login
+User --> UC_Logout
+Admin --> UC_Login
+Admin --> UC_ManageUsers
+Admin --> UC_ViewStock
+Admin --> UC_ViewReports
+StockMgr --> UC_Login
+StockMgr --> UC_ManageProducts
+StockMgr --> UC_RecordSupply
+StockMgr --> UC_ViewStock
+StockMgr --> UC_ViewExpired
+StockMgr --> UC_ViewDamaged
+Director --> UC_Login
+Director --> UC_ViewReports
+Director --> UC_ViewStock
+Director --> UC_ViewExpired
+Director --> UC_ViewDamaged
+Account --> UC_Login
+Account --> UC_Account
+
+@enduml
