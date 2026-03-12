@@ -10,7 +10,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    let token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    // Allow token to be passed via query string for download links (e.g. PDF reports)
+    if (!token && req.query && req.query.token) {
+      token = String(req.query.token);
+    }
     if (!token) {
       return res.status(401).json({ message: 'Authentication required' });
     }

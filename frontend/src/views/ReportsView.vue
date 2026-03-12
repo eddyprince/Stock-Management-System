@@ -124,9 +124,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import client from '../api/client';
+import { useAuthStore } from '../stores/auth';
 
 const report = ref({});
 const loading = ref(true);
+const auth = useAuthStore();
 
 function formatDate(d) {
   return d ? new Date(d).toLocaleDateString() : '';
@@ -134,8 +136,10 @@ function formatDate(d) {
 
 function downloadPdf(type) {
   const safeType = type || 'summary';
-  // Use the same base URL/proxy as axios client: /api/reports/pdf?type=...
-  const url = `/api/reports/pdf?type=${encodeURIComponent(safeType)}`;
+  const token = auth.token;
+  const params = new URLSearchParams({ type: safeType });
+  if (token) params.append('token', token);
+  const url = `/api/reports/pdf?${params.toString()}`;
   window.open(url, '_blank');
 }
 
